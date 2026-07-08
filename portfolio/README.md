@@ -5,12 +5,14 @@ transitions and a vibrant-but-clean design system.
 
 ## Highlights
 
-- **Light, vibrant aesthetic** — warm paper canvas with saturated accents
-  (violet / coral / sky / green / lime), and a fixed backdrop whose color
-  slowly morphs as you travel through the page.
-- **A single interactive 3D element** (Three.js via React Three Fiber) — a glossy
-  blob in the hero that follows the cursor, distorts with scroll velocity, and
-  dives away once you leave the hero. No distracting floating background clutter.
+- **Light, vibrant aesthetic with one consistent accent system** — warm paper
+  canvas, a violet brand color with a deep-violet shade for depth, and lime
+  reserved exclusively for the closing panel. A fixed backdrop morphs through
+  violet tints as you travel through the page.
+- **A meaningful interactive 3D element** (Three.js via React Three Fiber) — a
+  stack of app screens ("every screen a scene", like layers in a design tool)
+  anchored in the hero. It tilts toward the cursor and the layers fan apart as
+  you start scrolling, then fades away. No floating background clutter.
 - **Cinematic scroll transitions** —
   - Hero: zoom-through exit (the headline grows toward the camera and dissolves).
   - Work: the page pins and the project gallery travels **horizontally** while
@@ -54,7 +56,7 @@ portfolio/src/
 ├── styles/global.css   # design tokens & base styles (the design system)
 ├── data/projects.ts    # project case-study content — edit your work here
 ├── three/
-│   ├── Scene.tsx       # the interactive hero blob (WebGL)
+│   ├── Scene.tsx       # the interactive layered-screens hero element (WebGL)
 │   └── scrollState.ts  # shared scroll/mouse state feeding the render loop
 ├── hooks/useLenis.ts   # smooth-scroll setup
 └── components/         # Loader, Nav, Backdrop, Hero, Work, About, Process, Contact

@@ -2,34 +2,35 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import "./Process.css";
 
+/* A violet progression that deepens step by step, echoing the layered screens */
 const STEPS = [
   {
     n: "01",
     title: "Listen",
     text: "Deep-dive interviews, data audits and shadowing sessions to understand the real problem — not the assumed one.",
-    accent: "#65b30e",
-    soft: "#eaf6cf",
+    accent: "#6c4cf1",
+    soft: "#f1edfe",
   },
   {
     n: "02",
     title: "Frame",
     text: "Translate research into a sharp narrative: who we serve, what changes for them, and how we'll know it worked.",
-    accent: "#6c4cf1",
-    soft: "#ece7ff",
+    accent: "#5c3ce0",
+    soft: "#e9e2fd",
   },
   {
     n: "03",
     title: "Craft",
     text: "Rapid cycles of prototyping and testing. Systematic components, expressive motion, zero clutter.",
-    accent: "#f4502a",
-    soft: "#ffe9e1",
+    accent: "#4f30c9",
+    soft: "#e0d7fc",
   },
   {
     n: "04",
     title: "Ship & Learn",
     text: "Partner with engineering to launch, then measure, iterate and fold learnings back into the system.",
-    accent: "#0e9be9",
-    soft: "#e1f2fe",
+    accent: "#3b21a8",
+    soft: "#d6cbfa",
   },
 ];
 
