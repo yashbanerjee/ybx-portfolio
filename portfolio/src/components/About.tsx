@@ -1,5 +1,12 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  animate,
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import "./About.css";
 
 const STATEMENT: { w: string; accent?: boolean }[] = (
@@ -9,10 +16,17 @@ const STATEMENT: { w: string; accent?: boolean }[] = (
   .map((w) => ({ w, accent: w === "stories" || w === "plot" || w === "point." }));
 
 const STATS = [
-  { value: "6", label: "Years designing" },
-  { value: "6", label: "Countries served" },
-  { value: "14+", label: "Industries" },
-  { value: "∞", label: "Iterations" },
+  { value: 6, suffix: "", label: "Years designing", accent: "#6c4cf1", soft: "#ece7ff" },
+  { value: 6, suffix: "", label: "Countries served", accent: "#f4502a", soft: "#ffe9e1" },
+  { value: 14, suffix: "+", label: "Industries", accent: "#0e9be9", soft: "#e1f2fe" },
+  { value: null, suffix: "∞", label: "Iterations", accent: "#65b30e", soft: "#eaf6cf" },
+];
+
+const CHIP_COLORS = [
+  { accent: "#6c4cf1", soft: "#ece7ff" },
+  { accent: "#f4502a", soft: "#ffe9e1" },
+  { accent: "#65b30e", soft: "#eaf6cf" },
+  { accent: "#0e9be9", soft: "#e1f2fe" },
 ];
 
 const SKILLS = [
@@ -28,6 +42,29 @@ const SKILLS = [
   "Data Analytics",
   "Figma / Adobe Suite",
 ];
+
+/** Numbers roll up from zero the first time they enter the viewport */
+function CountUp({ value, suffix }: { value: number | null; suffix: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!inView || value === null) return;
+    const controls = animate(0, value, {
+      duration: 1.6,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, value]);
+
+  return (
+    <span ref={ref}>
+      {value === null ? suffix : `${display}${suffix}`}
+    </span>
+  );
+}
 
 function Word({
   word,
@@ -83,33 +120,62 @@ export default function About() {
               <motion.div
                 key={s.label}
                 className="about__stat"
+                style={
+                  { "--accent": s.accent, "--soft": s.soft } as React.CSSProperties
+                }
                 initial={{ opacity: 0, rotateY: -40, x: -30 }}
                 whileInView={{ opacity: 1, rotateY: 0, x: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span className="about__stat-value">{s.value}</span>
+                <span className="about__stat-value">
+                  <CountUp value={s.value} suffix={s.suffix} />
+                </span>
                 <span className="about__stat-label">{s.label}</span>
               </motion.div>
             ))}
           </div>
 
-          <motion.div
-            className="about__skills"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h3 className="about__skills-title">Toolkit</h3>
+          <div className="about__skills">
+            <motion.h3
+              className="about__skills-title"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Toolkit
+            </motion.h3>
             <div className="about__skills-list">
-              {SKILLS.map((s) => (
-                <span key={s} className="about__skill">
-                  {s}
-                </span>
-              ))}
+              {SKILLS.map((s, i) => {
+                const c = CHIP_COLORS[i % CHIP_COLORS.length];
+                return (
+                  <motion.span
+                    key={s}
+                    className="about__skill"
+                    style={
+                      {
+                        "--chip": c.accent,
+                        "--chip-soft": c.soft,
+                        "--tilt": `${i % 2 ? 1.4 : -1.4}deg`,
+                      } as React.CSSProperties
+                    }
+                    initial={{ opacity: 0, scale: 0.4, y: 18 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 320,
+                      damping: 18,
+                      delay: i * 0.055,
+                    }}
+                  >
+                    {s}
+                  </motion.span>
+                );
+              })}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
