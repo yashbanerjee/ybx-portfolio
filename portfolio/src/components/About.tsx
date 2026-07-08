@@ -9,21 +9,24 @@ const STATEMENT: { w: string; accent?: boolean }[] = (
   .map((w) => ({ w, accent: w === "stories" || w === "plot" || w === "point." }));
 
 const STATS = [
-  { value: "6+", label: "Years designing" },
-  { value: "20+", label: "Products shipped" },
-  { value: "4", label: "Industries" },
+  { value: "6", label: "Years designing" },
+  { value: "6", label: "Countries served" },
+  { value: "14+", label: "Industries" },
   { value: "∞", label: "Iterations" },
 ];
 
 const SKILLS = [
+  "UI/UX Design",
   "Product Strategy",
-  "Interaction Design",
   "Design Systems",
-  "Prototyping",
-  "User Research",
-  "Motion Design",
-  "Visual Identity",
-  "Figma / Framer",
+  "Wireframing & Prototyping",
+  "User & Market Research",
+  "Design Roadmapping",
+  "Brand & Visual Identity",
+  "Front-End Development",
+  "Stakeholder Management",
+  "Data Analytics",
+  "Figma / Adobe Suite",
 ];
 
 function Word({

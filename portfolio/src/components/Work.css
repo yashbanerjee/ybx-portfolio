@@ -1,7 +1,7 @@
 .work {
   position: relative;
   z-index: 1;
-  height: 440vh;
+  height: 540vh; /* scroll room for the 5-project horizontal gallery */
 }
 
 .work--stacked {

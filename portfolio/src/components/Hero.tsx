@@ -65,8 +65,9 @@ export default function Hero({ started }: { started: boolean }) {
           animate={started ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.65 }}
         >
-          Product designer with 6+ years turning complex problems into vibrant,
-          human experiences — across health, fintech and commerce.
+          Product designer with 6 years turning complex problems into vibrant,
+          human experiences — from COP28 and Dubai government platforms to
+          global F&amp;B brands, crypto trading and identity systems.
         </motion.p>
 
         <motion.div
@@ -75,7 +76,7 @@ export default function Hero({ started }: { started: boolean }) {
           animate={started ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.9 }}
         >
-          <span>Based in India</span>
+          <span>Based in Dubai, UAE</span>
           <span className="hero__meta-divider" />
           <span>Available for 2026</span>
           <span className="hero__meta-divider" />

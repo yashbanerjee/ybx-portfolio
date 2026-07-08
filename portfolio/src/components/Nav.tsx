@@ -54,7 +54,7 @@ export default function Nav() {
           </a>
         ))}
       </nav>
-      <a className="nav__cta" href="mailto:hello@yash.design">
+      <a className="nav__cta" href="mailto:mail@ybx.ae">
         Let's talk
       </a>
     </motion.header>

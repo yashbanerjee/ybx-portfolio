@@ -3,10 +3,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import "./Contact.css";
 
 const SOCIALS = [
+  { label: "mail@ybx.ae", href: "mailto:mail@ybx.ae" },
+  { label: "ybx.ae", href: "https://ybx.ae" },
   { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "Dribbble", href: "https://dribbble.com" },
-  { label: "Behance", href: "https://behance.net" },
-  { label: "X / Twitter", href: "https://x.com" },
+  { label: "+971 50 348 2117", href: "tel:+971503482117" },
 ];
 
 const ctaLine = {
@@ -35,7 +35,7 @@ export default function Contact() {
           <p className="contact__label">Next chapter</p>
           <motion.a
             className="contact__cta"
-            href="mailto:hello@yash.design"
+            href="mailto:mail@ybx.ae"
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.4 }}
