@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { useLenis, getLenis } from "./hooks/useLenis";
 import { scrollState } from "./three/scrollState";
+import Backdrop from "./components/Backdrop";
 import Loader from "./components/Loader";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
@@ -44,6 +45,7 @@ export default function App() {
   return (
     <>
       <Loader onDone={() => setStarted(true)} />
+      <Backdrop />
       <Suspense fallback={null}>
         <Scene />
       </Suspense>

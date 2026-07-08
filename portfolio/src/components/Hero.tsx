@@ -1,5 +1,10 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+} from "framer-motion";
 import "./Hero.css";
 
 const line = {
@@ -18,15 +23,17 @@ export default function Hero({ started }: { started: boolean }) {
     offset: ["start start", "end start"],
   });
 
-  /* The whole hero tilts back and sinks into 3D space as you scroll away */
-  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 18]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  /* Zoom-through exit: the headline grows toward the camera and dissolves,
+     as if you dive through the words into the rest of the page */
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.55]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const blur = useTransform(scrollYProgress, [0, 0.7], [0, 14]);
+  const filter = useMotionTemplate`blur(${blur}px)`;
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
 
   return (
     <section className="hero" id="top" ref={ref}>
-      <motion.div className="hero__inner container" style={{ rotateX, scale, y, opacity }}>
+      <motion.div className="hero__inner container" style={{ scale, opacity, filter, y }}>
         <motion.p
           className="hero__eyebrow section-label"
           initial={{ opacity: 0, y: 20 }}
@@ -72,7 +79,7 @@ export default function Hero({ started }: { started: boolean }) {
           <span className="hero__meta-divider" />
           <span>Available for 2026</span>
           <span className="hero__meta-divider" />
-          <span className="hero__scroll-hint">Scroll to explore ↓</span>
+          <span className="hero__scroll-hint">Scroll to dive in ↓</span>
         </motion.div>
       </motion.div>
 

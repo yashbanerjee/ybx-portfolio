@@ -2,7 +2,6 @@
   position: relative;
   z-index: 1;
   padding-block: var(--space-7);
-  perspective: 1000px;
 }
 
 .about__statement {
@@ -10,15 +9,18 @@
   font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 500;
-  line-height: 1.15;
+  line-height: 1.18;
   letter-spacing: -0.015em;
-  max-width: 18em;
-  transform-style: preserve-3d;
+  max-width: 20em;
 }
 
-.about__statement em {
-  font-style: normal;
-  color: var(--lime);
+.about__word {
+  display: inline-block;
+  will-change: opacity, transform;
+}
+
+.about__word--accent {
+  color: var(--coral);
 }
 
 .about__grid {
@@ -39,9 +41,8 @@
   padding: var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: rgba(31, 31, 38, 0.45);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--surface);
+  box-shadow: 0 14px 34px -24px rgba(23, 21, 15, 0.3);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -57,7 +58,7 @@
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 600;
-  color: var(--lime);
+  color: var(--violet);
 }
 
 .about__stat-label {
@@ -65,13 +66,13 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--paper-dim);
+  color: var(--text-dim);
 }
 
 .about__skills-title {
   font-size: var(--text-md);
   margin-bottom: var(--space-3);
-  color: var(--paper-dim);
+  color: var(--text-dim);
 }
 
 .about__skills-list {
@@ -86,14 +87,15 @@
   padding: 0.5em 1.2em;
   border: 1px solid var(--line);
   border-radius: 99px;
-  color: var(--paper-dim);
+  background: var(--surface);
+  color: var(--text-dim);
   transition: all 0.3s var(--ease-out);
   cursor: default;
 }
 
 .about__skill:hover {
-  border-color: var(--lime);
-  color: var(--lime);
+  border-color: var(--violet);
+  color: var(--violet);
   transform: translateY(-3px) rotate(-1.5deg);
 }
 

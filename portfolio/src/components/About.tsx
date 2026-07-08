@@ -1,6 +1,12 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import "./About.css";
+
+const STATEMENT: { w: string; accent?: boolean }[] = (
+  "I believe great products are stories — every screen a scene, every interaction a plot point. My job is to make sure people never want to put the book down."
+)
+  .split(" ")
+  .map((w) => ({ w, accent: w === "stories" || w === "plot" || w === "point." }));
 
 const STATS = [
   { value: "6+", label: "Years designing" },
@@ -20,37 +26,56 @@ const SKILLS = [
   "Figma / Framer",
 ];
 
+function Word({
+  word,
+  accent,
+  progress,
+  range,
+}: {
+  word: string;
+  accent?: boolean;
+  progress: MotionValue<number>;
+  range: [number, number];
+}) {
+  const opacity = useTransform(progress, range, [0.14, 1]);
+  const y = useTransform(progress, range, [10, 0]);
+  return (
+    <motion.span
+      className={`about__word ${accent ? "about__word--accent" : ""}`}
+      style={{ opacity, y }}
+    >
+      {word}&nbsp;
+    </motion.span>
+  );
+}
+
 export default function About() {
-  const ref = useRef<HTMLElement>(null);
+  const statementRef = useRef<HTMLQuoteElement>(null);
   const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
+    target: statementRef,
+    offset: ["start 0.85", "start 0.25"],
   });
-  const yStatement = useTransform(scrollYProgress, [0, 1], ["12%", "-12%"]);
-  const rotateX = useTransform(scrollYProgress, [0, 0.4], [24, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
   return (
-    <section className="about" id="about" ref={ref}>
+    <section className="about" id="about">
       <div className="container">
         <p className="section-label">About</p>
-        <motion.blockquote
-          className="about__statement"
-          style={{ y: yStatement, rotateX, opacity }}
-        >
-          I believe great products are <em>stories</em> — every screen a
-          scene, every interaction a plot point. My job is to make sure
-          people never want to put the book down.
-        </motion.blockquote>
+
+        {/* Each word inks itself in as the paragraph crosses the viewport */}
+        <blockquote className="about__statement" ref={statementRef}>
+          {STATEMENT.map((item, i) => (
+            <Word
+              key={i}
+              word={item.w}
+              accent={item.accent}
+              progress={scrollYProgress}
+              range={[i / STATEMENT.length, Math.min(1, i / STATEMENT.length + 0.08)]}
+            />
+          ))}
+        </blockquote>
 
         <div className="about__grid">
-          <motion.div
-            className="about__stats"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div className="about__stats">
             {STATS.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -64,7 +89,7 @@ export default function About() {
                 <span className="about__stat-label">{s.label}</span>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
 
           <motion.div
             className="about__skills"

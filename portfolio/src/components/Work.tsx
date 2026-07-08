@@ -1,33 +1,39 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValue,
+  type MotionValue,
+} from "framer-motion";
 import { projects, type Project } from "../data/projects";
 import "./Work.css";
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(min-width: 900px)").matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 900px)");
+    const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return isDesktop;
+}
 
-  /* --- Scroll-driven 3D entrance & exit --- */
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const rotateXScroll = useTransform(scrollYProgress, [0, 0.35, 0.68, 1], [32, 0, 0, -10]);
-  const scale = useTransform(scrollYProgress, [0, 0.35, 0.68, 1], [0.85, 1, 1, 0.92]);
-  const opacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0, 1, 1, 0.35]);
-  const z = useTransform(scrollYProgress, [0, 0.35], [-160, 0]);
-
-  /* --- Hover tilt --- */
+/** Shared card body with cursor-tracking tilt */
+function CardBody({ project }: { project: Project }) {
   const tiltX = useMotionValue(0);
   const tiltY = useMotionValue(0);
-  const springTiltX = useSpring(tiltX, { stiffness: 180, damping: 20 });
-  const springTiltY = useSpring(tiltY, { stiffness: 180, damping: 20 });
+  const springX = useSpring(tiltX, { stiffness: 180, damping: 20 });
+  const springY = useSpring(tiltY, { stiffness: 180, damping: 20 });
 
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    tiltX.set(-py * 7);
-    tiltY.set(px * 9);
+    tiltX.set(-((e.clientY - rect.top) / rect.height - 0.5) * 5);
+    tiltY.set(((e.clientX - rect.left) / rect.width - 0.5) * 7);
   };
   const onMouseLeave = () => {
     tiltX.set(0);
@@ -35,74 +41,148 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   };
 
   return (
-    <div className="project" ref={ref}>
-      <motion.article
-        className="project__card"
-        style={{
-          rotateX: rotateXScroll,
-          scale,
-          opacity,
-          z,
-          ...({
-            "--accent": project.accent,
-            "--accent-soft": project.accentSoft,
-          } as React.CSSProperties),
-        }}
-        onMouseMove={onMouseMove}
-        onMouseLeave={onMouseLeave}
-      >
-        <motion.div
-          className="project__card-inner"
-          style={{ rotateX: springTiltX, rotateY: springTiltY }}
-        >
-          <div className="project__visual">
-            <span className="project__index">{project.index}</span>
-            <div className="project__orb" />
-            <div className="project__grid-lines" aria-hidden />
-          </div>
-
-          <div className="project__info">
-            <div className="project__info-head">
-              <h3 className="project__title">{project.title}</h3>
-              <span className="project__year">{project.year}</span>
-            </div>
-            <p className="project__tagline">{project.tagline}</p>
-            <p className="project__desc">{project.description}</p>
-            <div className="project__tags">
-              {project.tags.map((t) => (
-                <span key={t} className="project__tag">
-                  {t}
-                </span>
-              ))}
-            </div>
-            <div className="project__footer">
-              <span className="project__role">{project.role}</span>
-              <span className="project__link">
-                View case study <span className="project__link-arrow">→</span>
-              </span>
-            </div>
-          </div>
-        </motion.div>
-      </motion.article>
-      {index === 0 && null}
-    </div>
+    <motion.article
+      className="gcard"
+      style={{
+        rotateX: springX,
+        rotateY: springY,
+        ...({
+          "--accent": project.accent,
+          "--accent-soft": project.accentSoft,
+        } as React.CSSProperties),
+      }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="gcard__visual">
+        <span className="gcard__index">{project.index}</span>
+        <div className="gcard__orb" />
+        <div className="gcard__grid-lines" aria-hidden />
+      </div>
+      <div className="gcard__info">
+        <div className="gcard__info-head">
+          <h3 className="gcard__title">{project.title}</h3>
+          <span className="gcard__year">{project.year}</span>
+        </div>
+        <p className="gcard__tagline">{project.tagline}</p>
+        <p className="gcard__desc">{project.description}</p>
+        <div className="gcard__tags">
+          {project.tags.map((t) => (
+            <span key={t} className="gcard__tag">
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="gcard__footer">
+          <span className="gcard__role">{project.role}</span>
+          <span className="gcard__link">
+            View case study <span className="gcard__link-arrow">→</span>
+          </span>
+        </div>
+      </div>
+    </motion.article>
   );
 }
 
-export default function Work() {
+/** A slide in the horizontal gallery: rotates through 3D as it crosses the viewport */
+function GallerySlide({
+  project,
+  index,
+  count,
+  progress,
+}: {
+  project: Project;
+  index: number;
+  count: number;
+  progress: MotionValue<number>;
+}) {
+  const c = count > 1 ? index / (count - 1) : 0;
+  const rotateY = useTransform(progress, [c - 0.4, c, c + 0.4], [22, 0, -22]);
+  const scale = useTransform(progress, [c - 0.4, c, c + 0.4], [0.88, 1, 0.88]);
+  const slideOpacity = useTransform(progress, [c - 0.45, c - 0.1, c + 0.1, c + 0.45], [0.45, 1, 1, 0.45]);
+
   return (
-    <section className="work container" id="work">
-      <header className="work__header">
-        <p className="section-label">Selected Work</p>
-        <h2 className="work__heading">
-          Stories told through <em>pixels &amp; motion</em>
-        </h2>
+    <motion.div className="work__slide" style={{ rotateY, scale, opacity: slideOpacity }}>
+      <CardBody project={project} />
+    </motion.div>
+  );
+}
+
+function HorizontalGallery() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+
+  /* Page pins, cards travel sideways */
+  const trackProgress = useTransform(scrollYProgress, [0.04, 0.96], [0, 1]);
+  const x = useTransform(trackProgress, [0, 1], ["0vw", `-${(projects.length - 1) * 72}vw`]);
+
+  return (
+    <section className="work" id="work" ref={ref}>
+      <div className="work__pin">
+        <header className="work__header container">
+          <div>
+            <p className="section-label">Selected Work</p>
+            <h2 className="work__heading">
+              Stories told through <em>pixels &amp; motion</em>
+            </h2>
+          </div>
+          <span className="work__hint">Keep scrolling — the gallery moves sideways</span>
+        </header>
+        <motion.div className="work__track" style={{ x }}>
+          {projects.map((p, i) => (
+            <GallerySlide
+              key={p.id}
+              project={p}
+              index={i}
+              count={projects.length}
+              progress={trackProgress}
+            />
+          ))}
+        </motion.div>
+        <div className="work__progress container">
+          <span className="work__progress-num">01</span>
+          <div className="work__progress-bar">
+            <motion.div className="work__progress-fill" style={{ scaleX: trackProgress }} />
+          </div>
+          <span className="work__progress-num">0{projects.length}</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function VerticalList() {
+  return (
+    <section className="work work--stacked" id="work">
+      <header className="work__header container">
+        <div>
+          <p className="section-label">Selected Work</p>
+          <h2 className="work__heading">
+            Stories told through <em>pixels &amp; motion</em>
+          </h2>
+        </div>
       </header>
-      <div className="work__list">
-        {projects.map((p, i) => (
-          <ProjectCard key={p.id} project={p} index={i} />
+      <div className="work__vlist container">
+        {projects.map((p) => (
+          <motion.div
+            key={p.id}
+            initial={{ opacity: 0, y: 70, rotateX: 18 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <CardBody project={p} />
+          </motion.div>
         ))}
       </div>
     </section>
   );
+}
+
+export default function Work() {
+  const isDesktop = useIsDesktop();
+  return isDesktop ? <HorizontalGallery /> : <VerticalList />;
 }

@@ -1,21 +1,23 @@
 /* ============================================
    DESIGN SYSTEM — "Yash / 2026"
-   Dark canvas, vibrant accents, systematic scale
+   Light warm canvas, vibrant accents, systematic scale
    ============================================ */
 
 :root {
   /* -- Color tokens -- */
-  --ink: #0e0e10;
-  --ink-2: #16161a;
-  --ink-3: #1f1f26;
-  --paper: #f4f3ee;
-  --paper-dim: rgba(244, 243, 238, 0.6);
-  --paper-faint: rgba(244, 243, 238, 0.35);
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --text: #17150f;
+  --text-dim: rgba(23, 21, 15, 0.62);
+  --text-faint: rgba(23, 21, 15, 0.4);
+  --line: rgba(23, 21, 15, 0.12);
+  --ink: #17150f;
+
   --lime: #c6f24e;
-  --violet: #7c5cff;
-  --coral: #ff6b4a;
-  --sky: #5cc8ff;
-  --line: rgba(244, 243, 238, 0.12);
+  --green: #65b30e;
+  --violet: #6c4cf1;
+  --coral: #f4502a;
+  --sky: #0e9be9;
 
   /* -- Type scale (fluid, 1.25 ratio) -- */
   --font-display: "Clash Display", system-ui, sans-serif;
@@ -68,8 +70,8 @@ html.lenis body {
 }
 
 body {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-body);
   font-size: var(--text-md);
   line-height: 1.6;
@@ -78,8 +80,8 @@ body {
 }
 
 ::selection {
-  background: var(--lime);
-  color: var(--ink);
+  background: var(--violet);
+  color: #fff;
 }
 
 a {
@@ -114,10 +116,10 @@ h3 {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--ink);
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--ink-3);
+  background: rgba(23, 21, 15, 0.2);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -140,7 +142,7 @@ h3 {
   font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--paper-dim);
+  color: var(--text-dim);
 }
 
 .section-label::before {
@@ -148,7 +150,7 @@ h3 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--lime);
+  background: var(--violet);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -5,19 +5,27 @@ transitions and a vibrant-but-clean design system.
 
 ## Highlights
 
-- **Live 3D scene** (Three.js via React Three Fiber) fixed behind the content — a
-  morphing blob, wireframe orbit ring, floating geometric satellites and a particle
-  field, all continuously reacting to **scroll progress, scroll velocity and cursor
-  position**.
-- **3D scroll transitions** — the hero tilts back into space as you scroll away,
-  project cards flip in with perspective rotation, process steps swing in like
-  pages of a book, and the closing CTA rises out of depth.
+- **Light, vibrant aesthetic** — warm paper canvas with saturated accents
+  (violet / coral / sky / green / lime), and a fixed backdrop whose color
+  slowly morphs as you travel through the page.
+- **A single interactive 3D element** (Three.js via React Three Fiber) — a glossy
+  blob in the hero that follows the cursor, distorts with scroll velocity, and
+  dives away once you leave the hero. No distracting floating background clutter.
+- **Cinematic scroll transitions** —
+  - Hero: zoom-through exit (the headline grows toward the camera and dissolves).
+  - Work: the page pins and the project gallery travels **horizontally** while
+    each card rotates through 3D perspective, with a progress rail.
+  - About: the statement inks itself in **word by word** as you scroll.
+  - Process: a **stacking card deck** — each step pins and sinks back as the
+    next slides over it.
+  - Contact: a full-bleed violet panel that unfolds from a rounded card, with
+    masked-line CTA reveals.
 - **Hover interactions** — project cards tilt toward the cursor with spring
   physics, orbs scale, arrows slide, chips lift.
 - **Smooth scrolling** with Lenis, wired directly into the WebGL render loop.
 - **Systematic design identity** — a token-driven design system (`src/styles/global.css`):
-  fluid type scale (Clash Display + Satoshi), 8pt spacing scale, four accent colors
-  (lime / violet / coral / sky), consistent radii and easing curves.
+  fluid type scale (Clash Display + Satoshi), 8pt spacing scale, consistent
+  radii and easing curves.
 - Animated loader, kinetic hero typography, marquee, respects `prefers-reduced-motion`.
 
 ## Tech stack
@@ -46,10 +54,10 @@ portfolio/src/
 ├── styles/global.css   # design tokens & base styles (the design system)
 ├── data/projects.ts    # project case-study content — edit your work here
 ├── three/
-│   ├── Scene.tsx       # the interactive WebGL scene
+│   ├── Scene.tsx       # the interactive hero blob (WebGL)
 │   └── scrollState.ts  # shared scroll/mouse state feeding the render loop
 ├── hooks/useLenis.ts   # smooth-scroll setup
-└── components/         # Loader, Nav, Hero, Work, About, Process, Contact
+└── components/         # Loader, Nav, Backdrop, Hero, Work, About, Process, Contact
 ```
 
 ## Customizing content
