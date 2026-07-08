@@ -1,0 +1,267 @@
+.work {
+  position: relative;
+  z-index: 1;
+  height: 540vh; /* scroll room for the 5-project horizontal gallery */
+}
+
+.work--stacked {
+  height: auto;
+  padding-block: var(--space-6);
+}
+
+.work__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1rem, 3vh, 2.5rem);
+  padding-block: clamp(4.5rem, 10vh, 6rem) clamp(1.5rem, 4vh, 3rem);
+}
+
+.work__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.work__heading {
+  margin-top: var(--space-2);
+  font-size: var(--text-xl);
+  max-width: 14em;
+}
+
+.work__heading em {
+  font-style: normal;
+  background: linear-gradient(100deg, var(--coral), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.work__hint {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+  padding-bottom: 0.4em;
+}
+
+/* ---- Coverflow stage: every slide shares the centered cell ---- */
+.work__stage {
+  display: grid;
+  place-items: center;
+  perspective: 1600px;
+  min-height: 0;
+}
+
+.work__slide {
+  grid-area: 1 / 1;
+  width: clamp(520px, 56vw, 980px);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* ---- Progress rail ---- */
+.work__progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.work__progress-num {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.work__progress-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.work__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--coral));
+  transform-origin: left;
+}
+
+/* ---- Card body (shared) ---- */
+.gcard {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 24px 60px -30px rgba(23, 21, 15, 0.25);
+  transform-style: preserve-3d;
+  transition: border-color 0.4s var(--ease-out);
+}
+
+.gcard:hover {
+  border-color: var(--accent);
+}
+
+.gcard__visual {
+  position: relative;
+  min-height: min(46vh, 420px);
+  background: var(--accent-soft);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gcard__index {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.gcard__orb {
+  width: clamp(130px, 16vw, 220px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, var(--accent), transparent 70%),
+    radial-gradient(circle at 70% 75%, rgba(255, 255, 255, 0.7), transparent 55%);
+  filter: blur(1px);
+  transition: transform 0.7s var(--ease-out);
+}
+
+.gcard:hover .gcard__orb {
+  transform: scale(1.18) rotate(12deg);
+}
+
+.gcard__grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(23, 21, 15, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 21, 15, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(circle at center, #000 30%, transparent 78%);
+  mask-image: radial-gradient(circle at center, #000 30%, transparent 78%);
+  pointer-events: none;
+}
+
+.gcard__info {
+  padding: clamp(1.4rem, 2.6vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.gcard__info-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.gcard__title {
+  font-size: var(--text-lg);
+}
+
+.gcard__year {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+}
+
+.gcard__tagline {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.gcard__desc {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  max-width: 42em;
+}
+
+.gcard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: var(--space-1);
+}
+
+.gcard__tag {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4em 1em;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--text-dim);
+}
+
+.gcard__footer {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-top: 1px solid var(--line);
+}
+
+.gcard__role {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.gcard__link {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gcard__link-arrow {
+  display: inline-block;
+  transition: transform 0.35s var(--ease-expo);
+  color: var(--accent);
+}
+
+.gcard:hover .gcard__link-arrow {
+  transform: translateX(6px);
+}
+
+/* ---- Mobile vertical fallback ---- */
+.work__vlist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  perspective: 1000px;
+}
+
+@media (max-width: 899px) {
+  .gcard {
+    grid-template-columns: 1fr;
+  }
+  .gcard__visual {
+    min-height: 220px;
+  }
+}
