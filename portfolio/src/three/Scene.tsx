@@ -4,29 +4,37 @@ import { Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { scrollState } from "./scrollState";
 
-const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
-
 /* The site's vibrant accents, one per arm */
 const ARM_COLORS = ["#6c4cf1", "#f4502a", "#0e9be9", "#65b30e", "#6c4cf1", "#f4502a"];
 const ARM_COUNT = ARM_COLORS.length;
 
+/* World-space height of the viewport at the spark's depth (z = -1):
+   camera at z = 5, fov 42° → 2 * 6 * tan(21°) ≈ 4.61 world units per screen */
+const WORLD_PER_VIEWPORT = 4.61;
+const BASE_Y = 0.1;
+
 /**
  * A 3D asterisk — the designer's mark, the spark of an idea.
- * Anchored in the hero: it tilts toward the cursor, spins as you scroll,
- * and its arms burst outward with scroll velocity. Fades once you move on.
+ * Anchored to the hero section: it translates upward in lockstep with the
+ * page scroll, so it exits with the hero like static content and can never
+ * overlap later sections. While visible it tilts toward the cursor, spins
+ * with scroll, and its arms burst outward with scroll velocity.
  */
 function Spark() {
   const group = useRef<THREE.Group>(null!);
   const armRefs = useRef<(THREE.Group | null)[]>([]);
-  const matRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
 
   useFrame((state, delta) => {
-    const { progress, velocity, mouseX, mouseY } = scrollState;
+    const { progress, scrollPx, viewportH, velocity, mouseX, mouseY } = scrollState;
     const g = group.current;
     const t = state.clock.elapsedTime;
 
-    /* Belongs to the hero: fades as you scroll on, never travels */
-    const presence = clamp01(1 - (progress - 0.06) / 0.08);
+    /* Scroll the spark away together with the hero content */
+    const scrolledWorld = (scrollPx / Math.max(1, viewportH)) * WORLD_PER_VIEWPORT;
+    g.position.y = BASE_Y + scrolledWorld;
+
+    /* Skip the rest of the work once it is far off-screen */
+    if (scrolledWorld > WORLD_PER_VIEWPORT * 1.2) return;
 
     /* Tilt toward the cursor + slow idle turn */
     const rx = -mouseY * 0.4 + Math.sin(t * 0.4) * 0.08;
@@ -37,7 +45,7 @@ function Spark() {
     /* Scrolling spins the asterisk like a turbine */
     g.rotation.z = THREE.MathUtils.damp(g.rotation.z, progress * Math.PI * 6, 2.5, delta);
 
-    const s = (0.86 + presence * 0.14) * (1 + Math.sin(t * 1.2) * 0.015);
+    const s = 1 + Math.sin(t * 1.2) * 0.015;
     g.scale.setScalar(THREE.MathUtils.damp(g.scale.x, s, 3, delta));
 
     /* Arms burst outward with scroll velocity, breathe softly at rest */
@@ -50,13 +58,10 @@ function Spark() {
       arm.position.x = Math.cos(angle) * reach;
       arm.position.y = Math.sin(angle) * reach;
     });
-    matRefs.current.forEach((mat) => {
-      if (mat) mat.opacity = presence;
-    });
   });
 
   return (
-    <group ref={group} position={[2.5, 0.1, -1]}>
+    <group ref={group} position={[2.5, BASE_Y, -1]}>
       {ARM_COLORS.map((color, i) => {
         const angle = (i / ARM_COUNT) * Math.PI * 2;
         return (
@@ -70,16 +75,7 @@ function Spark() {
           >
             <mesh>
               <capsuleGeometry args={[0.21, 1.05, 12, 24]} />
-              <meshStandardMaterial
-                ref={(el) => {
-                  matRefs.current[i] = el;
-                }}
-                color={color}
-                roughness={0.18}
-                metalness={0.15}
-                transparent
-                opacity={1}
-              />
+              <meshStandardMaterial color={color} roughness={0.18} metalness={0.15} />
             </mesh>
           </group>
         );

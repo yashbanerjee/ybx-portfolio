@@ -5,6 +5,10 @@
 export const scrollState = {
   /** 0 → 1 across the whole page */
   progress: 0,
+  /** current scroll position in pixels */
+  scrollPx: 0,
+  /** viewport height in pixels */
+  viewportH: 800,
   /** smoothed scroll velocity, roughly -1 → 1 */
   velocity: 0,
   /** normalized mouse, -1 → 1 */

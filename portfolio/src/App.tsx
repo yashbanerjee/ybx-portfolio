@@ -24,6 +24,8 @@ export default function App() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const y = lenis ? lenis.scroll : window.scrollY;
       scrollState.progress = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+      scrollState.scrollPx = y;
+      scrollState.viewportH = window.innerHeight;
       const v = lenis ? Math.max(-1, Math.min(1, lenis.velocity / 60)) : 0;
       scrollState.velocity += (v - scrollState.velocity) * 0.12;
       raf = requestAnimationFrame(update);
