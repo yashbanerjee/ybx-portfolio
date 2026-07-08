@@ -1,0 +1,87 @@
+.contact {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--space-7);
+  perspective: 1000px;
+  display: flex;
+  flex-direction: column;
+  min-height: 90svh;
+}
+
+.contact__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  flex: 1;
+  justify-content: center;
+}
+
+.contact__cta {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  transform-style: preserve-3d;
+  transition: letter-spacing 0.5s var(--ease-out);
+}
+
+.contact__cta:hover {
+  letter-spacing: 0.005em;
+}
+
+.contact__cta-line--accent {
+  background: linear-gradient(100deg, var(--lime), var(--sky) 55%, var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.contact__note {
+  max-width: 30em;
+  font-size: var(--text-sm);
+  color: var(--paper-dim);
+}
+
+.contact__socials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.contact__social {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.6em 1.4em;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  transition: all 0.3s var(--ease-out);
+}
+
+.contact__social:hover {
+  border-color: var(--lime);
+  color: var(--lime);
+  transform: translateY(-3px);
+}
+
+.contact__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding-block: var(--space-3);
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}

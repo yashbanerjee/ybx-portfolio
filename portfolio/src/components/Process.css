@@ -1,0 +1,102 @@
+.process {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--space-7);
+}
+
+.process__heading {
+  margin-top: var(--space-3);
+  font-size: var(--text-xl);
+  max-width: 14em;
+}
+
+.process__track {
+  position: relative;
+  margin-top: var(--space-6);
+  perspective: 1200px;
+}
+
+.process__line {
+  position: absolute;
+  top: -var(--space-3);
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-bottom: var(--space-4);
+  background: linear-gradient(90deg, var(--lime), var(--violet), var(--coral), var(--sky));
+  transform-origin: left;
+  border-radius: 99px;
+}
+
+.process__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  transform-style: preserve-3d;
+}
+
+.process__step {
+  position: relative;
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(22, 22, 26, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: border-color 0.35s var(--ease-out);
+}
+
+.process__step:hover {
+  border-color: rgba(244, 243, 238, 0.3);
+}
+
+.process__step-num {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.process__step-title {
+  margin-top: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.process__step-text {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--paper-dim);
+}
+
+.process__step-glow {
+  position: absolute;
+  bottom: -60px;
+  right: -60px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.16;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.process__step:hover .process__step-glow {
+  opacity: 0.34;
+}
+
+@media (max-width: 1000px) {
+  .process__steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .process__steps {
+    grid-template-columns: 1fr;
+  }
+}
