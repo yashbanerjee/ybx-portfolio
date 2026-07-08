@@ -13,11 +13,11 @@
   --line: rgba(23, 21, 15, 0.12);
   --ink: #17150f;
 
-  /* One brand accent (violet system) + lime reserved for the finale */
-  --violet: #6c4cf1;
-  --violet-deep: #4f30c9;
-  --violet-soft: #ece7ff;
   --lime: #c6f24e;
+  --green: #65b30e;
+  --violet: #6c4cf1;
+  --coral: #f4502a;
+  --sky: #0e9be9;
 
   /* -- Type scale (fluid, 1.25 ratio) -- */
   --font-display: "Clash Display", system-ui, sans-serif;

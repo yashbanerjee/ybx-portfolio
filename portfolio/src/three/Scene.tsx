@@ -1,22 +1,23 @@
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, RoundedBox } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { scrollState } from "./scrollState";
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
-/* Violet system, back (lightest) → front (deepest) */
-const LAYER_COLORS = ["#ddd6fc", "#b3a5f8", "#8d76f4", "#6c4cf1", "#4f30c9"];
+/* The site's vibrant accents, one per arm */
+const ARM_COLORS = ["#6c4cf1", "#f4502a", "#0e9be9", "#65b30e", "#6c4cf1", "#f4502a"];
+const ARM_COUNT = ARM_COLORS.length;
 
 /**
- * "Every screen a scene" — a stack of app screens (design layers).
- * It stays anchored in place: it tilts toward the cursor and the layers
- * fan apart as you start scrolling, like an exploded view in a design tool.
+ * A 3D asterisk — the designer's mark, the spark of an idea.
+ * Anchored in the hero: it tilts toward the cursor, spins as you scroll,
+ * and its arms burst outward with scroll velocity. Fades once you move on.
  */
-function ScreenStack() {
+function Spark() {
   const group = useRef<THREE.Group>(null!);
-  const layerRefs = useRef<(THREE.Group | null)[]>([]);
+  const armRefs = useRef<(THREE.Group | null)[]>([]);
   const matRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
 
   useFrame((state, delta) => {
@@ -24,35 +25,30 @@ function ScreenStack() {
     const g = group.current;
     const t = state.clock.elapsedTime;
 
-    /* Belongs to the hero: fades as you move on, but never travels */
+    /* Belongs to the hero: fades as you scroll on, never travels */
     const presence = clamp01(1 - (progress - 0.06) / 0.08);
-    /* Layers fan apart during the first stretch of scrolling */
-    const fan = clamp01(progress / 0.09);
 
-    const rx = 0.34 - mouseY * 0.22 + Math.sin(t * 0.6) * 0.035;
-    const ry = -0.68 + mouseX * 0.3 + Math.cos(t * 0.45) * 0.035;
+    /* Tilt toward the cursor + slow idle turn */
+    const rx = -mouseY * 0.4 + Math.sin(t * 0.4) * 0.08;
+    const ry = 0.25 + mouseX * 0.45 + t * 0.06;
     g.rotation.x = THREE.MathUtils.damp(g.rotation.x, rx, 3, delta);
-    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, ry, 3, delta);
+    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, ry, 2, delta);
 
-    const s = 0.82 + presence * 0.08;
+    /* Scrolling spins the asterisk like a turbine */
+    g.rotation.z = THREE.MathUtils.damp(g.rotation.z, progress * Math.PI * 6, 2.5, delta);
+
+    const s = (0.86 + presence * 0.14) * (1 + Math.sin(t * 1.2) * 0.015);
     g.scale.setScalar(THREE.MathUtils.damp(g.scale.x, s, 3, delta));
 
-    const n = LAYER_COLORS.length;
-    layerRefs.current.forEach((layer, i) => {
-      if (!layer) return;
-      const centered = i - (n - 1) / 2;
-      /* Visibly cascaded even at rest, exploding further as you scroll */
-      const spread = 0.42 + fan * 0.5 + Math.abs(velocity) * 0.3;
-      const stagger = 0.3 + fan * 0.2;
-      layer.position.z = THREE.MathUtils.damp(layer.position.z, centered * spread, 4, delta);
-      layer.position.y = THREE.MathUtils.damp(layer.position.y, centered * stagger * 0.75, 4, delta);
-      layer.position.x = THREE.MathUtils.damp(layer.position.x, centered * stagger, 4, delta);
-      layer.rotation.z = THREE.MathUtils.damp(
-        layer.rotation.z,
-        centered * (0.02 + fan * 0.06),
-        4,
-        delta
-      );
+    /* Arms burst outward with scroll velocity, breathe softly at rest */
+    const burst = Math.min(0.5, Math.abs(velocity) * 1.2);
+    armRefs.current.forEach((arm, i) => {
+      if (!arm) return;
+      const wave = Math.sin(t * 1.6 + i * 1.1) * 0.035;
+      const reach = 0.78 + wave + burst;
+      const angle = (i / ARM_COUNT) * Math.PI * 2;
+      arm.position.x = Math.cos(angle) * reach;
+      arm.position.y = Math.sin(angle) * reach;
     });
     matRefs.current.forEach((mat) => {
       if (mat) mat.opacity = presence;
@@ -60,28 +56,34 @@ function ScreenStack() {
   });
 
   return (
-    <group ref={group} position={[2.05, -0.05, -1]} rotation={[0.34, -0.68, 0]}>
-      {LAYER_COLORS.map((color, i) => (
-        <group
-          key={color}
-          ref={(el) => {
-            layerRefs.current[i] = el;
-          }}
-        >
-          <RoundedBox args={[2.35, 1.55, 0.07]} radius={0.09} smoothness={6}>
-            <meshStandardMaterial
-              ref={(el) => {
-                matRefs.current[i] = el;
-              }}
-              color={color}
-              roughness={0.38}
-              metalness={0.08}
-              transparent
-              opacity={1}
-            />
-          </RoundedBox>
-        </group>
-      ))}
+    <group ref={group} position={[2.5, 0.1, -1]}>
+      {ARM_COLORS.map((color, i) => {
+        const angle = (i / ARM_COUNT) * Math.PI * 2;
+        return (
+          <group
+            key={i}
+            ref={(el) => {
+              armRefs.current[i] = el;
+            }}
+            position={[Math.cos(angle) * 0.78, Math.sin(angle) * 0.78, 0]}
+            rotation={[0, 0, angle - Math.PI / 2]}
+          >
+            <mesh>
+              <capsuleGeometry args={[0.21, 1.05, 12, 24]} />
+              <meshStandardMaterial
+                ref={(el) => {
+                  matRefs.current[i] = el;
+                }}
+                color={color}
+                roughness={0.18}
+                metalness={0.15}
+                transparent
+                opacity={1}
+              />
+            </mesh>
+          </group>
+        );
+      })}
     </group>
   );
 }
@@ -115,8 +117,8 @@ export default function Scene() {
       >
         <ambientLight intensity={0.85} />
         <directionalLight position={[4, 6, 3]} intensity={1.4} />
-        <pointLight position={[-4, -2, 3]} intensity={10} color="#9a86f6" />
-        <ScreenStack />
+        <pointLight position={[-4, -2, 3]} intensity={10} color="#ffffff" />
+        <Spark />
         <CameraRig />
         <Environment preset="city" />
       </Canvas>

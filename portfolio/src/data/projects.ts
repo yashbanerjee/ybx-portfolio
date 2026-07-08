@@ -22,8 +22,8 @@ export const projects: Project[] = [
     year: "2025",
     role: "Lead Product Designer",
     tags: ["Mobile App", "Design System", "Health Tech"],
-    accent: "#6c4cf1",
-    accentSoft: "#ece7ff",
+    accent: "#65b30e",
+    accentSoft: "#eaf6cf",
   },
   {
     id: "orbit",
@@ -35,8 +35,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "Senior Product Designer",
     tags: ["Fintech", "Data Viz", "Web Platform"],
-    accent: "#4f30c9",
-    accentSoft: "#e2dbfc",
+    accent: "#6c4cf1",
+    accentSoft: "#ece7ff",
   },
   {
     id: "terra",
@@ -48,8 +48,8 @@ export const projects: Project[] = [
     year: "2024",
     role: "Product Designer",
     tags: ["E-commerce", "Branding", "Marketplace"],
-    accent: "#6c4cf1",
-    accentSoft: "#ece7ff",
+    accent: "#f4502a",
+    accentSoft: "#ffe9e1",
   },
   {
     id: "nimbus",
@@ -61,7 +61,7 @@ export const projects: Project[] = [
     year: "2023",
     role: "Product Designer",
     tags: ["SaaS", "Interaction Design", "Motion"],
-    accent: "#4f30c9",
-    accentSoft: "#e2dbfc",
+    accent: "#0e9be9",
+    accentSoft: "#e1f2fe",
   },
 ];
