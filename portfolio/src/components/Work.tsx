@@ -84,7 +84,14 @@ function CardBody({ project }: { project: Project }) {
   );
 }
 
-/** A slide in the horizontal gallery: rotates through 3D as it crosses the viewport */
+const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+/**
+ * Coverflow shuffle: every card is anchored to the center of the stage.
+ * `d` is the card's signed distance from the active position — 0 means
+ * front-and-center; ±1 means one step off, peeking in from the side,
+ * scaled down and angled inward toward the middle.
+ */
 function GallerySlide({
   project,
   index,
@@ -96,13 +103,22 @@ function GallerySlide({
   count: number;
   progress: MotionValue<number>;
 }) {
-  const c = count > 1 ? index / (count - 1) : 0;
-  const rotateY = useTransform(progress, [c - 0.4, c, c + 0.4], [22, 0, -22]);
-  const scale = useTransform(progress, [c - 0.4, c, c + 0.4], [0.88, 1, 0.88]);
-  const slideOpacity = useTransform(progress, [c - 0.45, c - 0.1, c + 0.1, c + 0.45], [0.45, 1, 1, 0.45]);
+  const dist = (p: number) => p * (count - 1) - index;
+
+  const x = useTransform(progress, (p) => `${-dist(p) * 58}vw`);
+  const rotateY = useTransform(progress, (p) => -clamp(dist(p), -1, 1) * 26);
+  const scale = useTransform(progress, (p) => 1 - Math.min(Math.abs(dist(p)), 1) * 0.14);
+  const slideOpacity = useTransform(
+    progress,
+    (p) => 1 - Math.min(Math.abs(dist(p)), 1.4) * 0.4
+  );
+  const zIndex = useTransform(progress, (p) => Math.round(100 - Math.abs(dist(p)) * 10));
 
   return (
-    <motion.div className="work__slide" style={{ rotateY, scale, opacity: slideOpacity }}>
+    <motion.div
+      className="work__slide"
+      style={{ x, rotateY, scale, opacity: slideOpacity, zIndex }}
+    >
       <CardBody project={project} />
     </motion.div>
   );
@@ -115,9 +131,8 @@ function HorizontalGallery() {
     offset: ["start start", "end end"],
   });
 
-  /* Page pins, cards travel sideways */
+  /* Page pins, the deck shuffles through the center */
   const trackProgress = useTransform(scrollYProgress, [0.04, 0.96], [0, 1]);
-  const x = useTransform(trackProgress, [0, 1], ["0vw", `-${(projects.length - 1) * 72}vw`]);
 
   return (
     <section className="work" id="work" ref={ref}>
@@ -129,9 +144,9 @@ function HorizontalGallery() {
               Stories told through <em>pixels &amp; motion</em>
             </h2>
           </div>
-          <span className="work__hint">Keep scrolling — the gallery moves sideways</span>
+          <span className="work__hint">Keep scrolling — the deck shuffles through</span>
         </header>
-        <motion.div className="work__track" style={{ x }}>
+        <div className="work__stage">
           {projects.map((p, i) => (
             <GallerySlide
               key={p.id}
@@ -141,7 +156,7 @@ function HorizontalGallery() {
               progress={trackProgress}
             />
           ))}
-        </motion.div>
+        </div>
         <div className="work__progress container">
           <span className="work__progress-num">01</span>
           <div className="work__progress-bar">

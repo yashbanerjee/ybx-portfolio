@@ -53,20 +53,19 @@
   padding-bottom: 0.4em;
 }
 
-/* ---- Horizontal track ---- */
-.work__track {
-  display: flex;
-  gap: 4vw;
-  padding-inline: var(--gutter);
-  perspective: 1400px;
-  will-change: transform;
+/* ---- Coverflow stage: every slide shares the centered cell ---- */
+.work__stage {
+  display: grid;
+  place-items: center;
+  perspective: 1600px;
+  min-height: 0;
 }
 
 .work__slide {
-  flex: 0 0 68vw;
-  max-width: 1100px;
+  grid-area: 1 / 1;
+  width: clamp(520px, 56vw, 980px);
   transform-style: preserve-3d;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 /* ---- Progress rail ---- */
